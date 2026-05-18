@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AUTH_API_ORIGIN, getOnboardingMe } from "@/lib/backend-api";
 
@@ -13,7 +13,7 @@ type DebugState = {
     | { kind: "error"; message: string };
 };
 
-export default function AuthDebugPanel() {
+function AuthDebugPanelInner() {
   const params = useSearchParams();
   const enabled = params.get("authdebug") === "1";
   const [state, setState] = useState<DebugState | null>(() =>
@@ -84,3 +84,10 @@ export default function AuthDebugPanel() {
   );
 }
 
+export default function AuthDebugPanel() {
+  return (
+    <Suspense fallback={null}>
+      <AuthDebugPanelInner />
+    </Suspense>
+  );
+}
